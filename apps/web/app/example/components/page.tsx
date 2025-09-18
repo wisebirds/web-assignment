@@ -7,6 +7,15 @@ import {
 } from "@repo/ui/src/components/ui/dialog";
 import { Input } from "@repo/ui/src/components/ui/input";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@repo/ui/src/components/ui/pagination";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -32,7 +41,7 @@ import {
 export default function Page() {
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <Button>button</Button>
+      <Button className="bg-primary text-white">button</Button>
       <Dialog>
         <DialogContent>
           <DialogHeader>
@@ -75,6 +84,23 @@ export default function Page() {
           </TableRow>
         </TableBody>
       </Table>
+
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </main>
   );
 }
