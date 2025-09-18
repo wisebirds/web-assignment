@@ -39,8 +39,8 @@
           - src/components (shadcn components)
   ```
 
-- 화면 기획서를 보고 자유롭게 개발하세요. (디자인 보다 기능 위주로 개발해주세요.)
-- api는 apps/web/utils/api-client.ts 참고하시면 됩니다.
+- 화면 기획서를 보고 자유롭게 개발해주세요. (디자인 보다 기능 위주로 개발해주세요.)
+- api는 apps/web/utils/api-client.ts 사용해주시면 됩니다.
 
 **화면 기획서**
 
