@@ -44,7 +44,7 @@
 
 **화면 기획서**
 
-[[와이즈버즈 프론트엔드 채용 사전과제.pdf](https://github.com/user-attachments/files/22417555/default.pdf)
+[와이즈버즈 프론트엔드 채용 사전과제.pdf](https://github.com/user-attachments/files/22417555/default.pdf)
 
 
 **Reference**
