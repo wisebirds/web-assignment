@@ -44,7 +44,8 @@
 
 **화면 기획서**
 
-[화면 기획서 PDF 다운로드](https://file.notion.so/f/f/6982f344-4306-42b2-bb5f-3425240dffc1/4241eccd-cc80-41b3-a852-1676c5e6d211/%EC%99%80%EC%9D%B4%EC%A6%88%EB%B2%84%EC%A6%88_%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C_%EC%B1%84%EC%9A%A9_%EC%82%AC%EC%A0%84%EA%B3%BC%EC%A0%9C.pdf?table=block&id=fb9d888b-2433-4f8f-aa2c-1869a3a40200&spaceId=6982f344-4306-42b2-bb5f-3425240dffc1&expirationTimestamp=1758232800000&signature=fI61uWwD0bmIN9BgTrr1QyY9si0IAQku_MGpvr6gbV0&downloadName=%EC%99%80%EC%9D%B4%EC%A6%88%EB%B2%84%EC%A6%88+%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C+%EC%B1%84%EC%9A%A9+%EC%82%AC%EC%A0%84%EA%B3%BC%EC%A0%9C.pdf)
+[[와이즈버즈 프론트엔드 채용 사전과제.pdf](https://github.com/user-attachments/files/22417555/default.pdf)
+
 
 **Reference**
 
