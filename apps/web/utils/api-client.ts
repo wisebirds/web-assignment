@@ -154,10 +154,29 @@ class SupabaseAxiosClient {
       });
 
       // Extract total count from Content-Range header
-      const contentRange = response.headers["content-range"];
-      const total = contentRange
-        ? parseInt(contentRange.split("/")[1])
-        : response.data.length;
+      // Always fetch total count from API using Prefer: count=exact header
+      let total: number;
+      const countUrl = endpoint; // use the same url as data fetch
+      try {
+        const countResponse = await this.client.get<T[]>(countUrl, {
+          headers: {
+            Prefer: "count=exact",
+            Range: "0-0", // only need headers, not data
+          },
+        });
+        const contentRange =
+          countResponse.headers["content-range"] ||
+          countResponse.headers["Content-Range"];
+        if (contentRange) {
+          const match = contentRange.match(/\/(\d+)$/);
+          total =
+            match && match[1] ? parseInt(match[1], 10) : response.data.length;
+        } else {
+          total = response.data.length;
+        }
+      } catch {
+        total = response.data.length;
+      }
       const totalPages = Math.ceil(total / limit);
 
       return {
@@ -384,6 +403,7 @@ export class CampaignsAPI {
   constructor(private client: SupabaseAxiosClient) {}
 
   async getAll(options?: QueryOptions): Promise<PaginatedResponse<Campaign>> {
+    console.log("🚀 : CampaignsAPI : getAll : options:", options);
     return this.client.get<Campaign>("/web_assignment_campaigns", options);
   }
 
