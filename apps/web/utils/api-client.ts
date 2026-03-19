@@ -15,6 +15,8 @@ export type CampaignObjective =
   | "BRAND"
   | "VIDEO_VIEWS";
 
+export type CampaignPeriod = "DAILY" | "WEEKLY" | "MONTHLY";
+
 export interface Company {
   id: number;
   name: string;
@@ -35,6 +37,7 @@ export interface Campaign {
   name: string;
   enabled: boolean;
   campaign_objective: CampaignObjective;
+  period: CampaignPeriod;
   impressions: number;
   clicks: number;
   ctr: string;
@@ -287,6 +290,22 @@ class SupabaseAxiosClient {
     }
   }
 
+  // Get distinct values for a column via RPC
+  async getDistinct<T extends string>(
+    tableName: string,
+    column: string
+  ): Promise<T[]> {
+    try {
+      const response = await this.client.post<T[]>(
+        "/rpc/get_distinct_column_values",
+        { table_name: tableName, column_name: column }
+      );
+      return response.data;
+    } catch (error: any) {
+      throw this.handleError(error);
+    }
+  }
+
   // Error handling
   private handleError(error: any): Error {
     if (error.response?.data) {
@@ -398,13 +417,63 @@ export class UsersAPI {
   }
 }
 
+export interface CampaignFilterParams {
+  period?: CampaignPeriod;
+  campaign_objective?: CampaignObjective;
+  enabled?: boolean;
+  name?: string;
+}
+
 // Campaigns API
 export class CampaignsAPI {
   constructor(private client: SupabaseAxiosClient) {}
 
-  async getAll(options?: QueryOptions): Promise<PaginatedResponse<Campaign>> {
-    console.log("🚀 : CampaignsAPI : getAll : options:", options);
-    return this.client.get<Campaign>("/web_assignment_campaigns", options);
+  async getAll(
+    options?: QueryOptions & { campaignFilters?: CampaignFilterParams }
+  ): Promise<PaginatedResponse<Campaign>> {
+    const { campaignFilters, ...queryOptions } = options ?? {};
+    const filters: Record<string, string> = {
+      ...queryOptions.filters,
+    };
+
+    if (campaignFilters?.period) {
+      filters.period = `eq.${campaignFilters.period}`;
+    }
+    if (campaignFilters?.campaign_objective) {
+      filters.campaign_objective = `eq.${campaignFilters.campaign_objective}`;
+    }
+    if (campaignFilters?.enabled !== undefined) {
+      filters.enabled = `eq.${campaignFilters.enabled}`;
+    }
+    if (campaignFilters?.name) {
+      filters.name = `ilike.*${campaignFilters.name}*`;
+    }
+
+    return this.client.get<Campaign>("/web_assignment_campaigns", {
+      ...queryOptions,
+      filters,
+    });
+  }
+
+  async getFilters(): Promise<{
+    period: CampaignPeriod[];
+    campaign_objective: CampaignObjective[];
+  }> {
+    const [periods, objectives] = await Promise.all([
+      this.client.getDistinct<CampaignPeriod>(
+        "web_assignment_campaigns",
+        "period"
+      ),
+      this.client.getDistinct<CampaignObjective>(
+        "web_assignment_campaigns",
+        "campaign_objective"
+      ),
+    ]);
+
+    return {
+      period: periods,
+      campaign_objective: objectives,
+    };
   }
 
   async getById(id: number): Promise<Campaign | null> {
@@ -428,6 +497,16 @@ export class CampaignsAPI {
     return this.client.get<Campaign>("/web_assignment_campaigns", {
       ...options,
       filters: { campaign_objective: `eq.${objective}` },
+    });
+  }
+
+  async getByPeriod(
+    period: CampaignPeriod,
+    options?: QueryOptions
+  ): Promise<PaginatedResponse<Campaign>> {
+    return this.client.get<Campaign>("/web_assignment_campaigns", {
+      ...options,
+      filters: { period: `eq.${period}` },
     });
   }
 
