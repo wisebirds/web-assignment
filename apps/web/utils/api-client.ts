@@ -455,10 +455,12 @@ export class CampaignsAPI {
     });
   }
 
-  async getFilters(): Promise<{
-    period: CampaignPeriod[];
-    campaign_objective: CampaignObjective[];
-  }> {
+  async getFilters(): Promise<
+    {
+      key: string;
+      values: string[];
+    }[]
+  > {
     const [periods, objectives] = await Promise.all([
       this.client.getDistinct<CampaignPeriod>(
         "web_assignment_campaigns",
@@ -470,10 +472,16 @@ export class CampaignsAPI {
       ),
     ]);
 
-    return {
-      period: periods,
-      campaign_objective: objectives,
-    };
+    return [
+      {
+        key: "period",
+        values: periods,
+      },
+      {
+        key: "campaign_objective",
+        values: objectives,
+      },
+    ];
   }
 
   async getById(id: number): Promise<Campaign | null> {
