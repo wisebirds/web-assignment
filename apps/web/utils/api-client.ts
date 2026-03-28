@@ -418,8 +418,8 @@ export class UsersAPI {
 }
 
 export interface CampaignFilterParams {
-  period?: CampaignPeriod;
-  campaign_objective?: CampaignObjective;
+  period?: CampaignPeriod | CampaignPeriod[];
+  campaign_objective?: CampaignObjective | CampaignObjective[];
   enabled?: boolean;
   name?: string;
 }
@@ -437,10 +437,16 @@ export class CampaignsAPI {
     };
 
     if (campaignFilters?.period) {
-      filters.period = `eq.${campaignFilters.period}`;
+      filters.period = Array.isArray(campaignFilters.period)
+        ? `in.(${campaignFilters.period.join(",")})`
+        : `eq.${campaignFilters.period}`;
     }
     if (campaignFilters?.campaign_objective) {
-      filters.campaign_objective = `eq.${campaignFilters.campaign_objective}`;
+      filters.campaign_objective = Array.isArray(
+        campaignFilters.campaign_objective
+      )
+        ? `in.(${campaignFilters.campaign_objective.join(",")})`
+        : `eq.${campaignFilters.campaign_objective}`;
     }
     if (campaignFilters?.enabled !== undefined) {
       filters.enabled = `eq.${campaignFilters.enabled}`;
