@@ -27,9 +27,9 @@ export interface User {
   id: number;
   email: string;
   name: string;
-  company_id?: number;
+  password: string;
   created_at: string;
-  web_assignment_company?: Company;
+  updated_at: string;
 }
 
 export interface Campaign {
@@ -356,19 +356,11 @@ export class UsersAPI {
   constructor(private client: SupabaseAxiosClient) {}
 
   async getAll(options?: QueryOptions): Promise<PaginatedResponse<User>> {
-    const defaultOptions = {
-      ...options,
-      select: "*,web_assignment_company(id,name)",
-    };
-    return this.client.get<User>("/web_assignment_users", defaultOptions);
+    return this.client.get<User>("/web_assignment_users", options);
   }
 
   async getById(id: number): Promise<User | null> {
-    return this.client.getById<User>(
-      "/web_assignment_users",
-      id,
-      "*,web_assignment_company(id,name)"
-    );
+    return this.client.getById<User>("/web_assignment_users", id);
   }
 
   async create(user: Partial<User>): Promise<User[]> {
@@ -379,24 +371,12 @@ export class UsersAPI {
     return this.client.put<User>("/web_assignment_users", user, { id });
   }
 
-  async getByCompany(
-    companyId: number,
-    options?: QueryOptions
-  ): Promise<PaginatedResponse<User>> {
-    return this.client.get<User>("/web_assignment_users", {
-      ...options,
-      select: "*,web_assignment_company(id,name)",
-      filters: { company_id: `eq.${companyId}` },
-    });
-  }
-
   async searchByEmail(
     email: string,
     options?: QueryOptions
   ): Promise<PaginatedResponse<User>> {
     return this.client.get<User>("/web_assignment_users", {
       ...options,
-      select: "*,web_assignment_company(id,name)",
       filters: { email: `ilike.*${email}*` },
     });
   }
@@ -407,7 +387,6 @@ export class UsersAPI {
   ): Promise<PaginatedResponse<User>> {
     return this.client.get<User>("/web_assignment_users", {
       ...options,
-      select: "*,web_assignment_company(id,name)",
       filters: { name: `ilike.*${name}*` },
     });
   }
@@ -681,9 +660,6 @@ const objectiveCounts = await supabaseAPI.campaigns.countByObjective();
 
 // Filter campaigns by objective
 const salesCampaigns = await supabaseAPI.campaigns.getByObjective('SALES');
-
-// Get users by company
-const companyUsers = await supabaseAPI.users.getByCompany(1);
 
 // Update campaign
 const updated = await supabaseAPI.campaigns.update(1, {
