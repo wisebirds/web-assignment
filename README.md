@@ -1,5 +1,7 @@
 ## web 과제
 
+### 과제 시작 전 첫 commit 을 남겨주세요.
+
 ### 제출 조건
 
 1. 과제 repo clone 후 개인 github 에 private repository 생성 후 Settings > Collaborators and teams > Manage access > Add People > dy128.kim@wisebirds.com, kimjieun@wisebirds.com
@@ -43,6 +45,9 @@
 
 - 화면 기획서를 보고 자유롭게 개발해주세요. (디자인 보다 기능 위주로 개발해주세요.)
 - api는 apps/web/utils/api-client.ts 사용해주시면 됩니다.
+
+### 과제 완료 후 
+- README.md 에 이름을 적어주시고 과제에서 이 부분을 이렇게 해냈다 자랑해주세요.
 
 **화면 기획서**
 
