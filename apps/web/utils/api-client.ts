@@ -43,9 +43,9 @@ export interface Campaign {
   period: CampaignPeriod;
   impressions: number;
   clicks: number;
-  ctr: string;
+  ctr: number;
   video_views: number;
-  vtr: string;
+  vtr: number;
   created_at: string;
 }
 
@@ -143,10 +143,12 @@ class SupabaseAxiosClient {
     // Column selection
     params.append("select", select);
 
-    // Filters
+    // Filters (also applied to the count request below)
+    const filterParams = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
         params.append(key, value.toString());
+        filterParams.append(key, value.toString());
       }
     });
 
@@ -162,7 +164,8 @@ class SupabaseAxiosClient {
       // Extract total count from Content-Range header
       // Always fetch total count from API using Prefer: count=exact header
       let total: number;
-      const countUrl = endpoint; // use the same url as data fetch
+      const filterQuery = filterParams.toString();
+      const countUrl = filterQuery ? `${endpoint}?${filterQuery}` : endpoint; // same filters as the data fetch
       try {
         const countResponse = await this.client.get<T[]>(countUrl, {
           headers: {
@@ -656,9 +659,9 @@ const newCampaign = await supabaseAPI.campaigns.create({
   campaign_objective: 'WEBSITE_TRAFFIC',
   impressions: 0,
   clicks: 0,
-  ctr: '0.0000',
+  ctr: 0,
   video_views: 0,
-  vtr: '0.0000'
+  vtr: 0
 });
 
 // Get top performing campaigns
