@@ -1,7 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-import bcrypt from "bcryptjs";
-
-const PASSWORD_SALT_ROUNDS = 10;
 
 // Configuration
 const API_BASE_URL = "https://zimobhtejidbcsrujhxd.supabase.co/rest/v1";
@@ -20,6 +17,14 @@ export type CampaignObjective =
 
 export type CampaignPeriod = "DAILY" | "WEEKLY" | "MONTHLY";
 
+export type ProfileColor =
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "purple";
+
 export interface Company {
   id: number;
   name: string;
@@ -28,9 +33,9 @@ export interface Company {
 
 export interface User {
   id: number;
-  email: string;
+  nickname: string;
   name: string;
-  password: string;
+  profile_color: ProfileColor;
   created_at: string;
   updated_at: string;
 }
@@ -370,26 +375,20 @@ export class UsersAPI {
   }
 
   async create(user: Partial<User>): Promise<User[]> {
-    const payload = user.password
-      ? { ...user, password: await bcrypt.hash(user.password, PASSWORD_SALT_ROUNDS) }
-      : user;
-    return this.client.post<User>("/web_assignment_users", payload);
+    return this.client.post<User>("/web_assignment_users", user);
   }
 
   async update(id: number, user: Partial<User>): Promise<User[]> {
-    const payload = user.password
-      ? { ...user, password: await bcrypt.hash(user.password, PASSWORD_SALT_ROUNDS) }
-      : user;
-    return this.client.put<User>("/web_assignment_users", payload, { id });
+    return this.client.put<User>("/web_assignment_users", user, { id });
   }
 
-  async searchByEmail(
-    email: string,
+  async searchByNickname(
+    nickname: string,
     options?: QueryOptions
   ): Promise<PaginatedResponse<User>> {
     return this.client.get<User>("/web_assignment_users", {
       ...options,
-      filters: { email: `ilike.*${email}*` },
+      filters: { nickname: `ilike.*${nickname}*` },
     });
   }
 
