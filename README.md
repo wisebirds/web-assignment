@@ -51,7 +51,7 @@
 
 **화면 기획서**
 
-[와이즈버즈 프론트엔드 채용 사전과제 figma](https://www.figma.com/design/6rjgLOPHhI48AekufTc7dY/frontend_assignment?node-id=0-1&t=R2GCfWkkp2aTIVL3-1)
+[와이즈버즈 프론트엔드 채용 사전과제 figma](https://www.figma.com/design/fHMM8Puv2MzHEDQu7FaD16/frontend_assignment?node-id=0-1)
 
 **Reference**
 
